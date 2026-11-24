@@ -5,6 +5,7 @@
 #include "application.h"
 #include "button.h"
 #include "config.h"
+#include "ui_demo.h"   // 触摸测试菜单
 #include "i2c_device.h"
 #include "esp32_camera.h"
 #include "mcp_server.h"
@@ -125,14 +126,23 @@ private:
             }
         });
 
-#if CONFIG_USE_DEVICE_AEC
+        // 双击 BOOT：切换触摸测试菜单（原 AEC 切换暂时移除，可后续恢复）
         boot_button_.OnDoubleClick([this]() {
             auto& app = Application::GetInstance();
             if (app.GetDeviceState() == kDeviceStateIdle) {
-                app.SetAecMode(app.GetAecMode() == kAecOff ? kAecOnDeviceSide : kAecOff);
+                ui_demo_show();
             }
         });
-#endif
+
+        // 连按 5 次 BOOT：进入配网模式（重新配置 WiFi，无需重刷固件）
+        // 用途：换 WiFi / 服务器地址错误时重新配网
+        boot_button_.OnMultipleClick([this]() {
+            auto& app = Application::GetInstance();
+            ESP_LOGW(TAG, "Boot button pressed 5 times -> enter WiFi config mode");
+            if (app.GetDeviceState() != kDeviceStateStarting) {
+                EnterWifiConfigMode();
+            }
+        }, 5);
     }
 
     void InitializeSt7789Display() {

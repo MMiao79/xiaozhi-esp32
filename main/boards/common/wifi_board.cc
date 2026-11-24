@@ -21,6 +21,7 @@
 #ifdef CONFIG_USE_ESP_BLUFI_WIFI_PROVISIONING
 #include "blufi.h"
 #endif
+#include "ui_wifi_qr.h"   // 配网二维码（热点/蓝牙配网共用）
 
 static const char *TAG = "WifiBoard";
 
@@ -142,6 +143,7 @@ void WifiBoard::OnNetworkEvent(NetworkEvent event, const std::string& data) {
         case NetworkEvent::WifiConfigModeExit:
             ESP_LOGI(TAG, "WiFi config mode exited");
             in_config_mode_ = false;
+            ui_wifi_qr_hide();   // 配网完成，切回主界面
             // Try to connect with the new credentials
             TryWifiConnect();
             break;
@@ -184,6 +186,11 @@ void WifiBoard::StartWifiConfigMode() {
         hint += wifi_manager.GetApWebUrl();
 
         Application::GetInstance().Alert(Lang::Strings::WIFI_CONFIG_MODE, hint.c_str(), "gear", Lang::Sounds::OGG_WIFICONFIG);
+
+        // 显示配网二维码（大屏设备）；小屏或失败时自动回退到上面的文字提示
+        if (ui_wifi_qr_show()) {
+            ESP_LOGI(TAG, "WiFi config QR code shown");
+        }
     });
 #elif CONFIG_USE_ESP_BLUFI_WIFI_PROVISIONING
     auto &blufi = Blufi::GetInstance();

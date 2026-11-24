@@ -1,5 +1,6 @@
 #include "lcd_display.h"
 #include "assets/lang_config.h"
+#include "ui_demo.h"   // 自定义 UI 示例（EEZ Studio 集成参考）
 #include "gif/lvgl_gif.h"
 #include "lvgl_theme.h"
 #include "settings.h"
@@ -555,6 +556,10 @@ void LcdDisplay::SetupUI() {
     lv_obj_set_style_text_font(emoji_label_, large_icon_font, 0);
     lv_obj_set_style_text_color(emoji_label_, lvgl_theme->text_color(), 0);
     lv_label_set_text(emoji_label_, MATERIAL_SYMBOLS_ROBOT_2);
+
+    // 初始化自定义 UI 示例（独立屏幕，默认不显示，调用 ui_demo_show() 才切换）
+    // 这是 EEZ Studio 导出的 UI 代码的集成位置
+    ui_demo_init();
 }
 #if CONFIG_IDF_TARGET_ESP32P4
 #define MAX_MESSAGES 40

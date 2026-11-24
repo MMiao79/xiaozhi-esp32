@@ -42,9 +42,12 @@ set(SOURCES "audio/audio_codec.cc"
             "device_state_machine.cc"
             "assets.cc"
             "main.cc"
+            "ui/ui_demo.cpp"
+            "ui/ui_wifi_qr.cpp"
+            "ui/qrcodegen/qrcodegen.c"
             )
 
-set(INCLUDE_DIRS "." "display" "display/lvgl_display" "display/lvgl_display/jpg" "audio" "audio/demuxer" "protocols")
+set(INCLUDE_DIRS "." "display" "display/lvgl_display" "display/lvgl_display/jpg" "audio" "audio/demuxer" "protocols" "ui" "ui/qrcodegen")
 
 # Add board common files
 list(APPEND SOURCES

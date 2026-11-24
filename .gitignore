@@ -18,3 +18,10 @@ main/mmap_generate_emoji.h
 *.bin
 mmap_generate_*.h
 .clangd
+
+# ===== 本地：烧录脚本产生的垃圾文件 =====
+0x0
+0x20000
+
+# ===== 本地：构建辅助脚本 =====
+archive-build.ps1
